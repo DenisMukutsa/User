@@ -13,11 +13,7 @@ class User {
 
     public User(int id, String name, boolean isAdmin) throws UserException {
         this.id = id;
-        for(User l : list) {
-            if (id == l.id) {
-                throw new UserException("Идентификатор пользователя не уникален.");
-            }
-        }
+        if(checkId(this.id)) throw new UserException("Идентификатор пользователя не уникален.");
 
         if(name != null && !name.equals("")) {
             this.name = name;
@@ -40,12 +36,10 @@ class User {
             throw new CloneNotSupportedException("Не указано имя пользователя.");
         }
         userCloned.isAdmin = this.isAdmin;
-        userCloned.id = (int) (Math.random() * 10);
-        for(User l : list) {
-            if (userCloned.id == l.id) {
-                userCloned.id =  (int) (Math.random() * 10);
+        int tempNumber = (int) (Math.random() * 10);
+        if (!checkId(tempNumber)) {
+                userCloned.id = tempNumber;
             }
-        }
         list.add(userCloned);
         return userCloned;
     }
@@ -69,7 +63,15 @@ class User {
 
    @Override
     public int hashCode() {
-       return Objects.hash(name, isAdmin);
+       return this.name.hashCode() + ((Boolean)this.isAdmin).hashCode();
+    }
+
+    public boolean checkId(int id) {
+        ArrayList<Integer> idList = new ArrayList<>();
+        for(User l : list) {
+            idList.add(l.id);
+        }
+        return idList.contains(id);
     }
 
     public static void print() {
