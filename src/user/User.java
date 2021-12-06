@@ -1,8 +1,9 @@
 package user;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
-public class User {
+class User {
     private int id;
     private String name;
     private boolean isAdmin;
@@ -40,6 +41,12 @@ public class User {
         }
         userCloned.isAdmin = this.isAdmin;
         userCloned.id = (int) (Math.random() * 10);
+        for(User l : list) {
+            if (userCloned.id == l.id) {
+                userCloned.id =  (int) (Math.random() * 10);
+            }
+        }
+        list.add(userCloned);
         return userCloned;
     }
 
@@ -48,7 +55,7 @@ public class User {
         if(this == obj) {
             return true;
         }
-        if(obj == null || obj.getClass() != this.getClass()) {
+        if(obj == null || !(obj instanceof User)) {
             return false;
         }
         User object = (User) obj;
@@ -62,41 +69,13 @@ public class User {
 
    @Override
     public int hashCode() {
-       int admin = (this.isAdmin == true) ? 1 : -1;
-       final int prime = 43;
-       int hash = 1;
-       int nameLength = this.name.length();
-       int charFirst = this.name.charAt(0);
-       int charSecond = this.name.charAt(1);
-       int charLast = this.name.charAt(this.name.length()-1);
-       return hash = prime * 3 + nameLength + charFirst + charSecond + charLast + admin;
+       return Objects.hash(name, isAdmin);
     }
 
-    public static void main(String[] args) {
-        try{
-            User user1 = new User(123, "Петров", true);
-            User user2 = new User(3, "Иванов", false);
-            User user3 = new User(140, "Сергеев", false);
-            User user1Cloned = (User)user1.clone();
-            System.out.println("Пользователь 1 равен клонированному пользователю: " + user1.equals(user1Cloned));
-            System.out.println("Пользователь 1 равен пользователю 2: " + user1.equals(user2));
-            System.out.println("Хеш-код Пользователя 1: " + user1.hashCode());
-            System.out.println("Хеш-код клонированного пользователя: " + user1Cloned.hashCode());
-            System.out.println("Хеш-код Пользователя 2: " + user2.hashCode());
-            System.out.println("Хеш-код Пользователя 3: " + user3.hashCode());
-            User user4 = new User(123, "Васильев", false);
+    public static void print() {
+        System.out.print("Список id существующих пользователей: ");
+        for(User l : list) {
+        System.out.print(l.id + ", ");
         }
-        catch(UserException e) {
-            System.out.println("Неверно указаны параметры пользователя.");
-        }
-        catch (CloneNotSupportedException e) {
-            System.out.println("Клонирование не поддерживается.");
-        }
-    }
-}
-
-class UserException extends Exception {
-    public UserException(String msg) {
-        System.out.println(msg);
     }
 }
