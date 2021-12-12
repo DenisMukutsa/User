@@ -1,7 +1,6 @@
 package user;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 class User {
     private int id;
@@ -9,7 +8,9 @@ class User {
     private boolean isAdmin;
     static ArrayList<User> list = new ArrayList<>();
 
-    public User() {}
+    public User() {
+
+    }
 
     public User(int id, String name, boolean isAdmin) throws UserException {
         this.id = id;
@@ -26,21 +27,30 @@ class User {
     }
 
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    protected Object clone() throws CloneNotSupportedException  {
+        String tempName;
+        int tempId = 0;
+        boolean tempIsAdmin = this.isAdmin;
+        User userCloned = null;
 
-        User userCloned = new User();
         if(this.name != null && !this.name.equals("")) {
-            userCloned.name = this.name;
+            tempName = this.name;
         }
         else {
             throw new CloneNotSupportedException("Не указано имя пользователя.");
         }
-        userCloned.isAdmin = this.isAdmin;
+
         int tempNumber = (int) (Math.random() * 10);
         if (!checkId(tempNumber)) {
-                userCloned.id = tempNumber;
-            }
-        list.add(userCloned);
+            tempId = tempNumber;
+        }
+
+        try{
+            userCloned = new User(tempId, tempName, tempIsAdmin);
+        }
+        catch (UserException e) {
+            e.getMessage();
+        }
         return userCloned;
     }
 
